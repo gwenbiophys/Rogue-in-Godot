@@ -1,9 +1,49 @@
-[gd_scene format=3 uid="uid://bshajxo1sq606"]
+[gd_scene load_steps=5 format=3 uid="uid://bshajxo1sq606"]
+
+[ext_resource type="Script" path="res://addons/onscreenkeyboard/onscreen_keyboard.gd" id="1_jpl6o"]
+[ext_resource type="Texture2D" uid="uid://b8q6dnfxqfbjx" path="res://player_sprite.png" id="2_icfgg"]
+[ext_resource type="Script" path="res://keyboard.gd" id="3_2tynu"]
+[ext_resource type="Script" path="res://generate_floor.gd" id="4_5y0vv"]
 
 [node name="main" type="Node2D"]
 
+[node name="start" type="Node2D" parent="."]
+
+[node name="RichTextLabel" type="RichTextLabel" parent="start"]
+offset_left = 219.0
+offset_top = 6.0
+offset_right = 346.0
+offset_bottom = 64.0
+text = "Rogue"
+
+[node name="LineEdit" type="LineEdit" parent="start"]
+offset_left = 147.0
+offset_top = 335.0
+offset_right = 394.0
+offset_bottom = 366.0
+text = "Your Name:"
+
+[node name="OnscreenKeyboard" type="PanelContainer" parent="start"]
+offset_left = 150.0
+offset_top = 172.0
+offset_right = 382.0
+offset_bottom = 308.0
+script = ExtResource("1_jpl6o")
+
 [node name="player" type="Node" parent="."]
 
+[node name="Node2D" type="Node2D" parent="player"]
+
+[node name="PlayerSprite" type="Sprite2D" parent="player/Node2D"]
+position = Vector2(128, 67)
+texture = ExtResource("2_icfgg")
+
+[node name="player_input" type="Node" parent="player"]
+script = ExtResource("3_2tynu")
+
 [node name="environment" type="Node" parent="."]
+script = ExtResource("4_5y0vv")
+
+[node name="Node2D" type="Node2D" parent="environment"]
 
 [node name="menu" type="Node" parent="."]
