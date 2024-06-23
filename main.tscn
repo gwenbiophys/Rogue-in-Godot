@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://bshajxo1sq606"]
+
+[node name="main" type="Node2D"]
+
+[node name="player" type="Node" parent="."]
+
+[node name="environment" type="Node" parent="."]
+
+[node name="menu" type="Node" parent="."]
