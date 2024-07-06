@@ -1,9 +1,9 @@
 [gd_scene load_steps=5 format=3 uid="uid://bshajxo1sq606"]
 
 [ext_resource type="Script" path="res://addons/onscreenkeyboard/onscreen_keyboard.gd" id="1_jpl6o"]
-[ext_resource type="Texture2D" uid="uid://b8q6dnfxqfbjx" path="res://player_sprite.png" id="2_icfgg"]
+[ext_resource type="Texture2D" uid="uid://b8q6dnfxqfbjx" path="res://assets/player_sprite.png" id="2_icfgg"]
 [ext_resource type="Script" path="res://keyboard.gd" id="3_2tynu"]
-[ext_resource type="Script" path="res://generate_floor.gd" id="4_5y0vv"]
+[ext_resource type="Script" path="res://scripts/newLevel.gd" id="4_5y0vv"]
 
 [node name="main" type="Node2D"]
 
@@ -25,9 +25,9 @@ text = "Your Name:"
 
 [node name="OnscreenKeyboard" type="PanelContainer" parent="start"]
 offset_left = 150.0
-offset_top = 172.0
+offset_top = 1012.0
 offset_right = 382.0
-offset_bottom = 308.0
+offset_bottom = 1148.0
 script = ExtResource("1_jpl6o")
 
 [node name="player" type="Node" parent="."]
