@@ -24,8 +24,8 @@ class room:
 	# parameters 
 	#const rooms_min: int = 1
 	const rooms_max: int = 9
-	const x_min: int = 2 
-	const y_min: int = 2 
+	const x_min: int = 4 
+	const y_min: int = 4 
 	const x_max: int = rfloor.x_length / 3 # same as bsze.x in source code (box size) 
 	const y_max: int = rfloor.y_length / 3 # bsze.y
 	const doors_min: int = 1
