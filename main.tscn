@@ -31,6 +31,7 @@ sources/0 = SubResource("TileSetAtlasSource_54jlb")
 [node name="start" type="Node2D" parent="."]
 
 [node name="RichTextLabel" type="RichTextLabel" parent="start"]
+visible = false
 offset_left = 219.0
 offset_top = 6.0
 offset_right = 346.0
@@ -38,6 +39,7 @@ offset_bottom = 64.0
 text = "Rogue"
 
 [node name="LineEdit" type="LineEdit" parent="start"]
+visible = false
 offset_left = 147.0
 offset_top = 335.0
 offset_right = 394.0
@@ -45,6 +47,7 @@ offset_bottom = 366.0
 text = "Your Name:"
 
 [node name="OnscreenKeyboard" type="PanelContainer" parent="start"]
+visible = false
 offset_left = 150.0
 offset_top = 12.0
 offset_right = 382.0
