@@ -96,38 +96,104 @@ func generate_room(rfloor, room, i):
 	# add a monster 
 	
 	# add gold 
+	
 	render_room(thisRoom) # this is only inside the function right now for testing, have to move it later 
+		# move to wherever the "when player enters a room" code will be 
 	return room
 # if the player is below the amulet spawn floor and does not ahve it, then the
 # the game will place it down, seemingly at each level.
 
-func render_room(thisRoom): 
+func render_room(thisRoom): # renders the tiles for the rooms 
 	pass 
-	# renders the tiles for the rooms 
-	# if normal room: 
-	# change this to have a match expression later? for the different tiles 
-	var coord_name = str("")
 	
-	var dictCoords = {
+	var dictCorn = {
 		"top_left": thisRoom.pos,
 		"top_right": thisRoom.pos + Vector2(thisRoom.size.x, 0),
 		"bottom_left": thisRoom.pos + Vector2(0, thisRoom.size.y),
 		"bottom_right": thisRoom.pos + Vector2(thisRoom.size.x, thisRoom.size.y), 
-		"top": [Vector2(1,0),Vector2(2,0),Vector2(3,0)]
+		
 		#"left": 
 	}
+	
+	# find coords for top wall 
+	var xwall_top = range(dictCorn["top_left"].x + 1, dictCorn["top_right"].x)
+	var ywall_top: Array 
+	ywall_top.resize(xwall_top.size()) # make it match the length of the x array 
+	ywall_top.fill(dictCorn["top_left"].y) # fill it with the y pos 
+	
+	var coord: Vector2 
+	
+	var tilesArray_top: Array
+	for i in range(0, xwall_top.size()): 
+		coord = Vector2(0,0)
+		coord = Vector2(xwall_top[i], ywall_top[i])
+		tilesArray_top.append(coord)
 		
+	# find coords for bottom wall 
+	var xwall_bottom = range(dictCorn["bottom_left"].x + 1, dictCorn["bottom_right"].x)
+	var ywall_bottom: Array 
+	ywall_bottom.resize(xwall_bottom.size()) # make it match the length of the x array 
+	ywall_bottom.fill(dictCorn["bottom_left"].y) # fill it with the y pos 
+	
+	var tilesArray_bottom: Array
+	for i in range(0, xwall_bottom.size()): 
+		coord = Vector2(0,0) 
+		coord = Vector2(xwall_bottom[i], ywall_bottom[i])
+		tilesArray_bottom.append(coord)
+		
+	
+	# find coords for left wall 
+	var ywall_left = range(dictCorn["top_left"].y + 1, dictCorn["bottom_left"].y)
+	var xwall_left: Array 
+	xwall_left.resize(ywall_left.size()) # make it match the length of the y array 
+	xwall_left.fill(dictCorn["top_left"].x) # fill it with the x pos 
+	
+	var tilesArray_left: Array
+	for i in range(0, ywall_left.size()): 
+		coord = Vector2(0,0) 
+		coord = Vector2(xwall_left[i], ywall_left[i])
+		tilesArray_left.append(coord)
+		
+	# find coords for right wall 
+	var ywall_right = range(dictCorn["top_right"].y + 1, dictCorn["bottom_right"].y)
+	var xwall_right: Array 
+	xwall_right.resize(ywall_right.size()) # make it match the length of the y array 
+	xwall_right.fill(dictCorn["top_right"].x) # fill it with the x pos 
+	
+	var tilesArray_right: Array
+	for i in range(0, ywall_right.size()): 
+		coord = Vector2(0,0) 
+		coord = Vector2(xwall_right[i], ywall_right[i])
+		tilesArray_right.append(coord)
+		
+	
+	var dictWalls = {
+		"top": tilesArray_top,
+		"bottom": tilesArray_bottom,
+		"left": tilesArray_left,
+		"right": tilesArray_right
+	}
+	
+	
+	# if normal room: 
 	# corners 
-	floormap.set_cell(0,dictCoords["top_left"], 0, Vector2i(3,0), 0) #top left 
-	floormap.set_cell(0,dictCoords["top_right"], 0, Vector2i(4,0), 0) # top right 
-	floormap.set_cell(0,dictCoords["bottom_left"], 0, Vector2i(5,0), 0) # bottom left
-	floormap.set_cell(0,dictCoords["bottom_right"], 0, Vector2i(6,0), 0) # bottom right 
+	floormap.set_cell(0,dictCorn["top_left"], 0, Vector2i(3,0), 0) #top left 
+	floormap.set_cell(0,dictCorn["top_right"], 0, Vector2i(4,0), 0) # top right 
+	floormap.set_cell(0,dictCorn["bottom_left"], 0, Vector2i(5,0), 0) # bottom left
+	floormap.set_cell(0,dictCorn["bottom_right"], 0, Vector2i(6,0), 0) # bottom right 
 	# sides 
-	for each in dictCoords["top"]: 
+	for each in dictWalls["top"]: 
 		floormap.set_cell(0,each, 0, Vector2i(0,0), 0)
 	# then copy this for the left, right, and bottom 
 	
+	for each in dictWalls["bottom"]: 
+		floormap.set_cell(0, each, 0, Vector2i(0,0), 0)
 	
+	for each in dictWalls["left"]: 
+		floormap.set_cell(0, each, 0, Vector2i(1,0), 0)
+	
+	for each in dictWalls["right"]: 
+		floormap.set_cell(0, each, 0, Vector2i(2,0), 0)
 	# if dark room: 
 
 
