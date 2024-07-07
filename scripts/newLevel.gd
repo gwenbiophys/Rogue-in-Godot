@@ -50,10 +50,13 @@ class level:
 
 
 # Called when the node enters the scene tree for the first time.
-func generate_level(floorP, roomP, room, floor):
-
+func generate_level(floorP, roomP, room, floor): # what is floorP and roomP? theyre not defined anywhere 
+	var thisFloor = level.new 
+	
 	for i in range(1, floorP.rooms_count):
-		append(level.rooms, generate_room(floorP, roomP))
+		thisFloor.rooms.append(generate_room(floorP, roomP)) 
+		# for a var, cant just call the "level" class, have to create 
+		# an object with the level class and then call that object.rooms 
 
 func generate_room(floorP, roomP):
 	
