@@ -1,8 +1,25 @@
 class_name new_level
 extends Node
 	
-var level_number: int = 1
+var level: int = 1
 
+class floor:
+	#parameters 
+	const rooms_count: int = 9
+	const x_length: int = 42 # from original rogue, mac may be different
+	const y_length: int = 30 # from original rogue, mac may be different
+	
+	const treasureroom_chance: float = 1/20
+	const treasures_max: int = 10 # in treasure room, specifically 
+	const treasures_min: int = 2 # in treasure room 
+	
+	const monsters_min: int = 0
+	#const monsters_max: int = 10 # fill in value, i have no idea, might not even be a limit!
+	
+	const traps_max: int = 10 
+	
+	#var rooms_count: int
+	var rooms: Array # array of rooms 
 
 class room:
 	# parameters 
@@ -10,8 +27,8 @@ class room:
 	const rooms_max: int = 9
 	const x_min: int = 2
 	const y_min: int = 2
-	const x_max: int = floor_parameters.x_length / 3
-	const y_max: int = floor_parameters.y_length / 3
+	const x_max: int = floor.x_length / 3
+	const y_max: int = floor.y_length / 3
 	const doors_min: int = 1
 	const doors_max: int = 4
 	const isgone_max: int = 4
@@ -28,23 +45,6 @@ class room:
 	var traps: Array # array of traps 
 
 
-
-class floor:
-	#parameters 
-	const rooms_count: int = 9
-	const x_length: int = 42 # from original rogue, mac may be different
-	const y_length: int = 30 # from original rogue, mac may be different
-	
-	const treasureroom_chance: float = 1/20
-	const treasures_max: int = 10
-	const treasures_min: int = 2
-	const monsters_min: int = 0
-	const monsters_max: int = 10 # fill in value, i have no idea, might not even be a limit!
-
-	#var rooms_count: int
-	var rooms: Array # array of rooms 
-
-
 # Called when the node enters the scene tree for the first time.
 func generate_floor(room, floor): 
 	var thisFloor = floor.new 
@@ -55,7 +55,17 @@ func generate_floor(room, floor):
 		# an object with the floor class and then call that object.rooms 
 
 func generate_room(floor, room):
+	# create a room object 
+	var thisRoom = room.new 
 	# decide room type 
+	# gone rooms-- pick random number of rooms, 0-3, randomly pick that number of rooms as gone 
+	
+	# dark or maze room 
+	if(randi_range(0,10) < level - 1): 
+		thisRoom.isdark = true 
+		if(randi_range(0,15) == 0):
+			thisRoom.ismaze = true
+		
 	
 	# decide location of room 
 	
