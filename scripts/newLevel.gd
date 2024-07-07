@@ -3,7 +3,7 @@ extends Node
 	
 var level: int = 1
 
-class floor:
+class rfloor: # changed to "rfloor" to avoid conflict with existing godot functions 
 	#parameters 
 	const rooms_count: int = 9
 	const x_length: int = 42 # from original rogue, mac may be different
@@ -27,11 +27,13 @@ class room:
 	const rooms_max: int = 9
 	const x_min: int = 2
 	const y_min: int = 2
-	const x_max: int = floor.x_length / 3
-	const y_max: int = floor.y_length / 3
+	const x_max: int = rfloor.x_length / 3
+	const y_max: int = rfloor.y_length / 3
 	const doors_min: int = 1
 	const doors_max: int = 4
 	const isgone_max: int = 4
+	
+	var box: Vector2 # coords of upper left corner of "box" room is in 
 	
 	var isgone: bool
 	var isdark: bool
@@ -46,17 +48,25 @@ class room:
 
 
 # Called when the node enters the scene tree for the first time.
-func generate_floor(room, floor): 
-	var thisFloor = floor.new 
+func generate_floor(room, rfloor): 
+	var thisFloor = rfloor.new 
 	
-	for i in range(1, floor.rooms_count):
-		thisFloor.rooms.append(generate_room(floor, room)) 
+	for i in range(1, rfloor.rooms_count):
+			
+		thisFloor.rooms.append(generate_room(rfloor, room, i)) 
 		# for a var, cant just call the "floor" class, have to create 
 		# an object with the floor class and then call that object.rooms 
 
-func generate_room(floor, room):
+func generate_room(rfloor, room, i):
 	# create a room object 
 	var thisRoom = room.new 
+	
+	# determine which "box" this room is in (top left corner)
+	#thisRoom.box = Vector2.ZERO
+	#thisRoom.box[0] = i % 3 * room.x_max + 1
+	#thisRoom.box[1] = i / 3 * room.y_max 
+	#print(thisRoom.box)
+	
 	# decide room type 
 	# gone rooms-- pick random number of rooms, 0-3, randomly pick that number of rooms as gone 
 	
@@ -65,9 +75,9 @@ func generate_room(floor, room):
 		thisRoom.isdark = true 
 		if(randi_range(0,15) == 0):
 			thisRoom.ismaze = true
-		
 	
 	# decide location of room 
+	
 	
 	# decide size of room 
 	
@@ -81,10 +91,12 @@ func generate_room(floor, room):
 
 
 # Called when the node enters the scene tree for the first time.
-#func _ready():
-#	pass # Replace with function body.
+func _ready():
+	generate_floor(room, rfloor) 
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass
+
+

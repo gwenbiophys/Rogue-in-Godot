@@ -10,7 +10,8 @@ func _ready():
 func _process(delta):
 	pass
 
-func _input(event):
-	if event is act-up:
+#func _input(event):
+#	if event is act-up:
 		# move up. do we have to evaluate 13 + combinations of key presses at each player input?
+#		pass
 
