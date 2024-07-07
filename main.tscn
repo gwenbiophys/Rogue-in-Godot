@@ -1,9 +1,27 @@
-[gd_scene load_steps=5 format=3 uid="uid://bshajxo1sq606"]
+[gd_scene load_steps=8 format=3 uid="uid://bshajxo1sq606"]
 
 [ext_resource type="Script" path="res://addons/onscreenkeyboard/onscreen_keyboard.gd" id="1_jpl6o"]
 [ext_resource type="Texture2D" uid="uid://b8q6dnfxqfbjx" path="res://assets/player_sprite.png" id="2_icfgg"]
 [ext_resource type="Script" path="res://keyboard.gd" id="3_2tynu"]
 [ext_resource type="Script" path="res://scripts/newLevel.gd" id="4_5y0vv"]
+[ext_resource type="Texture2D" uid="uid://cgcb2jv11ouof" path="res://assets/rogue wall tiles.png" id="5_e86t7"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_p8l0l"]
+texture = ExtResource("5_e86t7")
+texture_region_size = Vector2i(18, 18)
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+4:0/0 = 0
+5:0/0 = 0
+6:0/0 = 0
+7:0/0 = 0
+8:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_327er"]
+tile_size = Vector2i(18, 18)
+sources/0 = SubResource("TileSetAtlasSource_p8l0l")
 
 [node name="main" type="Node2D"]
 
@@ -25,9 +43,9 @@ text = "Your Name:"
 
 [node name="OnscreenKeyboard" type="PanelContainer" parent="start"]
 offset_left = 150.0
-offset_top = 1012.0
+offset_top = 12.0
 offset_right = 382.0
-offset_bottom = 1148.0
+offset_bottom = 148.0
 script = ExtResource("1_jpl6o")
 
 [node name="player" type="Node" parent="."]
@@ -47,3 +65,8 @@ script = ExtResource("4_5y0vv")
 [node name="Node2D" type="Node2D" parent="environment"]
 
 [node name="menu" type="Node" parent="."]
+
+[node name="TileMap" type="TileMap" parent="."]
+tile_set = SubResource("TileSet_327er")
+format = 2
+layer_0/tile_data = PackedInt32Array(720903, 65536, 0, 720904, 0, 0, 720905, 0, 0, 720906, 0, 0, 720907, 131072, 0, 786443, 262144, 0, 851979, 262144, 0, 917515, 262144, 0, 786439, 393216, 0, 851975, 393216, 0, 917511, 393216, 0, 983051, 196608, 0, 983047, 327680, 0, 983048, 0, 0, 983049, 0, 0, 983050, 0, 0, 786440, 458752, 0, 786441, 458752, 0, 786442, 458752, 0, 851978, 458752, 0, 917514, 458752, 0, 917513, 458752, 0, 917512, 458752, 0, 851976, 458752, 0, 851977, 458752, 0, 851980, 524288, 0, 851981, 524288, 0, 851982, 524288, 0, 851983, 524288, 0, 917519, 524288, 0, 983055, 524288, 0, 1048591, 524288, 0, 1048592, 524288, 0, 1048593, 524288, 0, 1048594, 524288, 0, 983058, 524288, 0, 917522, 524288, 0, 851986, 524288, 0, 786450, 524288, 0, 720914, 524288, 0, 720913, 524288, 0, 720912, 524288, 0, 720911, 524288, 0, 720910, 524288, 0)
