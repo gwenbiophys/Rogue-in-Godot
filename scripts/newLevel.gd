@@ -1,7 +1,8 @@
 class_name new_level
 extends Node
-	
+
 var level: int = 1
+var floormap: TileMap 
 
 class rfloor: # changed to "rfloor" to avoid conflict with existing godot functions 
 	#parameters 
@@ -77,12 +78,13 @@ func generate_room(rfloor, room, i):
 			thisRoom.ismaze = true
 	
 	# decide size and location of room 
+	# ___________ ISSUE!!! there is currently some overlap of the rooms-- need to fix!! 
 	if thisRoom.ismaze == true:
 		pass
 	else: 
 		# choose size of room 
 		while(thisRoom.pos.y <= 0):
-			thisRoom.size.x = randi_range(0, room.x_max - 4) + 4 
+			thisRoom.size.x = randi_range(0, room.x_max - 4) + 4
 			thisRoom.size.y = randi_range(0, room.y_max - 4) + 4 
 			# choose position of room based on size 
 			thisRoom.pos.x = thisRoom.box.x + randi_range(0, room.x_max - thisRoom.size.x)
@@ -94,18 +96,44 @@ func generate_room(rfloor, room, i):
 	# add a monster 
 	
 	# add gold 
+	render_room(thisRoom) # this is only inside the function right now for testing, have to move it later 
 	return room
 # if the player is below the amulet spawn floor and does not ahve it, then the
 # the game will place it down, seemingly at each level.
 
-func render_room(room): 
+func render_room(thisRoom): 
 	pass 
 	# renders the tiles for the rooms 
-	# first, lets try just the top corner 
+	# if normal room: 
+	# change this to have a match expression later? for the different tiles 
+	var coord_name = str("")
+	
+	var dictCoords = {
+		"top_left": thisRoom.pos,
+		"top_right": thisRoom.pos + Vector2(thisRoom.size.x, 0),
+		"bottom_left": thisRoom.pos + Vector2(0, thisRoom.size.y),
+		"bottom_right": thisRoom.pos + Vector2(thisRoom.size.x, thisRoom.size.y), 
+		"top": [Vector2(1,0),Vector2(2,0),Vector2(3,0)]
+		#"left": 
+	}
+		
+	# corners 
+	floormap.set_cell(0,dictCoords["top_left"], 0, Vector2i(3,0), 0) #top left 
+	floormap.set_cell(0,dictCoords["top_right"], 0, Vector2i(4,0), 0) # top right 
+	floormap.set_cell(0,dictCoords["bottom_left"], 0, Vector2i(5,0), 0) # bottom left
+	floormap.set_cell(0,dictCoords["bottom_right"], 0, Vector2i(6,0), 0) # bottom right 
+	# sides 
+	for each in dictCoords["top"]: 
+		floormap.set_cell(0,each, 0, Vector2i(0,0), 0)
+	# then copy this for the left, right, and bottom 
+	
+	
+	# if dark room: 
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	floormap = get_node("../FloorMap")
 	generate_floor(room, rfloor) 
 
 
