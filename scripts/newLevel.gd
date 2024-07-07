@@ -30,8 +30,8 @@ class room:
 	var ismaze: bool
 	
 	var istreasure: bool
-	var x_tiles: arr[int]
-	var y_tiles: arr[int]
+	var x_tiles: arr[int] # x coords of room 
+	var y_tiles: arr[int] # y coords of room 
 	var loot: arr[treasure]
 	var monsters: arr[monster]
 	var traps: arr[trap]
