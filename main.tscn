@@ -46,9 +46,9 @@ text = "Your Name:"
 
 [node name="OnscreenKeyboard" type="PanelContainer" parent="start"]
 offset_left = 150.0
-offset_top = 756.0
+offset_top = 12.0
 offset_right = 382.0
-offset_bottom = 892.0
+offset_bottom = 148.0
 script = ExtResource("1_jpl6o")
 
 [node name="player" type="Node" parent="."]

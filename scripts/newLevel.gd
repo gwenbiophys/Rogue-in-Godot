@@ -21,8 +21,8 @@ class room_parameters:
 	const doors_max: int = 4
 	
 	const isgone_max: int = 4
-	const isdark_
-	const ismaze
+	var isdark: bool
+	var ismaze: bool
 	
 	const treasureroom_chance: float = 1/20
 	const treasures_max: int = 10
@@ -36,17 +36,17 @@ class room:
 	var ismaze: bool
 	
 	var istreasure: bool
-	var x_tiles: arr[int] # x coords of room 
-	var y_tiles: arr[int] # y coords of room 
-	var loot: arr[treasure]
-	var monsters: arr[monster]
-	var traps: arr[trap]
+	var x_tiles: Array # x coords of room 
+	var y_tiles: Array # y coords of room 
+	var loot: Array # array of treasure items 
+	var monsters: Array # array of monsters
+	var traps: Array # array of traps 
 
 
 
 class level:
 	#var rooms_count: int
-	var rooms: arr[room]
+	var rooms: Array # array of rooms 
 
 
 # Called when the node enters the scene tree for the first time.
