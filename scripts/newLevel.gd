@@ -6,11 +6,11 @@ var level_number: int = 1
 
 
 class floor_parameters:
-	const x_length: int = 81 # from original rogue, mac may be different
-	const y_length: int = 24 # from original rogue, mac may be different
+	const x_length: int = 42 # from original rogue, mac may be different
+	const y_length: int = 30 # from original rogue, mac may be different
  
 class room_parameters:
-	const rooms_min: int = 1
+	#const rooms_min: int = 1
 	const rooms_max: int = 9
 	const x_min: int = 2
 	const y_min: int = 2
@@ -25,6 +25,10 @@ class room_parameters:
 	const monsters_max: int = 10 # fill in value, i have no idea, might not even be a limit!
 
 class room:
+	var isgone: bool
+	var isdark: bool
+	var ismaze: bool
+	
 	var istreasure: bool
 	var x_tiles: arr[int]
 	var y_tiles: arr[int]
@@ -34,7 +38,7 @@ class room:
 
 
 
-class floor:
+class level:
 	var rooms_count: int
 	var rooms: arr[room]
 
