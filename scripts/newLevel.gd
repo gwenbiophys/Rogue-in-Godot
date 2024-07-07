@@ -78,19 +78,26 @@ func generate_room(rfloor, room, i):
 			thisRoom.ismaze = true
 	
 	# decide size and location of room 
-	# ___________ ISSUE!!! there is currently some overlap of the rooms-- need to fix!! 
 	if thisRoom.ismaze == true:
 		pass
 	else: 
 		# choose size of room 
-		while(thisRoom.pos.y <= 0):
+		while(thisRoom.pos.y  == 0):
 			thisRoom.size.x = randi_range(0, room.x_max - 4) + 4
-			thisRoom.size.y = randi_range(0, room.y_max - 4) + 4 
+			thisRoom.size.y = randi_range(0, room.y_max - 4) + 4
 			# choose position of room based on size 
 			thisRoom.pos.x = thisRoom.box.x + randi_range(0, room.x_max - thisRoom.size.x)
-			thisRoom.pos.y = thisRoom.box.y + randi_range(0, room.y_max - thisRoom.size.y)
-			# if outside map, redo 
-			# this only checks for the y position, not sure if we need to also check for the x pos? 
+			thisRoom.pos.y = thisRoom.box.y + randi_range(0, room.y_max - thisRoom.size.y) 
+			# if outside bounds of the box (plus buffer), redo 
+			if (thisRoom.pos.y >= thisRoom.box.y + thisRoom.size.y - 1 ): 
+				thisRoom.pos.y = 0
+			if (thisRoom.pos.y <= thisRoom.box.y + 1): 
+				thisRoom.pos.y = 0
+			if (thisRoom.pos.x <= thisRoom.box.x + 1): 
+				thisRoom.pos.y = 0 
+			if (thisRoom.pos.x >= thisRoom.box.x + thisRoom.size.x - 1): 
+				thisRoom.pos.y = 0 
+
 		#print(thisRoom.pos)
 	
 	# add a monster 
