@@ -6,6 +6,7 @@ var level_number: int = 1
 
 
 class floor_parameters:
+	const rooms_count: int = 9
 	const x_length: int = 42 # from original rogue, mac may be different
 	const y_length: int = 30 # from original rogue, mac may be different
  
@@ -18,6 +19,11 @@ class room_parameters:
 	const y_max: int = floor_parameters.y_length / 3
 	const doors_min: int = 1
 	const doors_max: int = 4
+	
+	const isgone_max: int = 4
+	const isdark_
+	const ismaze
+	
 	const treasureroom_chance: float = 1/20
 	const treasures_max: int = 10
 	const treasures_min: int = 2
@@ -39,21 +45,19 @@ class room:
 
 
 class level:
-	var rooms_count: int
+	#var rooms_count: int
 	var rooms: arr[room]
 
 
 # Called when the node enters the scene tree for the first time.
 func generate_level(floorP, roomP, room, floor):
-	
-	# determine how many rooms
-	floor.rooms_count = randi() % floor.rooms_max + 1 + floor.rooms_min 
-	print(floor.rooms_count)
-	for i in range(1, floorP.rooms_count):
-		generate_rooms(floorP, roomP)
 
-func generate_rooms(floorP, roomP):
+	for i in range(1, floorP.rooms_count):
+		append(level.rooms, generate_room(floorP, roomP))
+
+func generate_room(floorP, roomP):
 	
+	return room
 # if the player is below the amulet spawn floor and does not ahve it, then the
 # the game will place it down, seemingly at each level.
 
