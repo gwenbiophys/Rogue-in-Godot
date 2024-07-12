@@ -56,6 +56,8 @@ func generate_floor(room, rfloor):
 		thisFloor.rooms = [0]
 		var rooms = thisFloor.rooms
 		rooms.push_back(generate_room(rfloor, room, i)) 
+	print(thisFloor.rooms)
+	return(thisFloor)
 
 func generate_room(rfloor, room, i):
 	# create a room object 
@@ -110,16 +112,61 @@ func generate_room(rfloor, room, i):
 # if the player is below the amulet spawn floor and does not ahve it, then the
 # the game will place it down, seemingly at each level.
 
+#func generate_passg(thisFloor): 
+	#var rooms = thisFloor.rooms 
+	## define an adjacent room 
+	## use 2d arrays? 
+	#var adjrooms: Array 
+	#for i in range(9): # i = r1
+		#adjrooms.append([])
+		#match i: 
+			#0:
+				#adjrooms[i].append([0, 1, 0, 1, 0, 0, 0, 0, 0])
+			#1: 
+				#adjrooms[i].append([1, 0, 1, 0, 1, 0, 0, 0, 0])
+			#2: 
+				#adjrooms[i].append([0, 1, 0, 0, 0, 1, 0, 0, 0])
+			#3: 
+				#adjrooms[i].append([1, 0, 0, 0, 1, 0, 1, 0, 0])
+			#4: 
+				#adjrooms[i].append([0, 1, 0, 1, 0, 1, 0, 1, 0])
+			#5: 
+				#adjrooms[i].append([0, 0, 1, 0, 1, 0, 0, 0, 1])
+			#6: 
+				#adjrooms[i].append([0, 0, 0, 1, 0, 0, 0, 1, 0])
+			#7: 
+				#adjrooms[i].append([0, 0, 0, 0, 1, 0, 1, 0, 1])
+			#8: 
+				#adjrooms[i].append([0, 0, 0, 0, 0, 1, 0, 1, 0])
+	#
+	#print(adjrooms)
+	#print(thisFloor.rooms)
+	## not sure if this is exactly right? but hopefully. also not sure how to reference but *shrug* 
+	#var r1 = thisFloor.rooms[randi_range(0,9)]
+	#var r2 = thisFloor.rooms[randi_range(0,9)] 
+	#if (adjrooms[r1[r2]] == true): 
+		#pass 
+	#
+	## start with one room 
+	##pick a random adjacent room to connect it to 
+	##add current room to the “graph” (already completed rooms) 
+	##then move to an adjacent room that isn't completed 
+	##if none, randomly pick an uncompleted room 
+	##repeat this process a few times to get more passages 
+#
+	#pass
+
+
 func render_room(thisRoom): # renders the tiles for the rooms 
-	pass 
+	# eventually, move this into a script for stuff with player movement? (maybe?) 
+	# like, "when player enters room" stuff 
+	# and this script can just generate the values for the rooms / passageways  
 	
 	var dictCorn = {
 		"top_left": thisRoom.pos,
 		"top_right": thisRoom.pos + Vector2(thisRoom.size.x, 0),
 		"bottom_left": thisRoom.pos + Vector2(0, thisRoom.size.y),
 		"bottom_right": thisRoom.pos + Vector2(thisRoom.size.x, thisRoom.size.y), 
-		
-		#"left": 
 	}
 	
 	# find coords for top wall 
@@ -207,7 +254,9 @@ func render_room(thisRoom): # renders the tiles for the rooms
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	floormap = get_node("../FloorMap")
-	generate_floor(room, rfloor) 
+	var thisFloor = generate_floor(room, rfloor) 
+	print(thisFloor.rooms)
+	#generate_passg(thisFloor)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
