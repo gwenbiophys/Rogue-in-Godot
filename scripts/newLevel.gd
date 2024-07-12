@@ -143,6 +143,9 @@ func generate_passg(thisFloor):
 	var r1 = randi_range(0,9) 
 	
 	#pick a random adjacent room to connect it to 
+	# might be faster to, instead of picking random rooms and seeing if theyre adjacent, 
+	# maybe identify the rooms that *are* adjacent first (for loop iterating over r2?) 
+	# and then pick a random one of those 
 	var r2 = randi_range(0,9)
 	while (adjrooms[r1][r2] != 1): 
 		print("not adjacent")
@@ -154,11 +157,34 @@ func generate_passg(thisFloor):
 	complete.append(r1)
 	
 	#make passageway 
-	# this section basically just needs to be copied / translated from the source code 
 	# determine direction 
+	# only right or down; if other way around, just swap r1 and r2, basically 
+	var rm: int
+	var direc: String 
+	if (r1 < r2): # "normal" way around 
+		rm = r1 
+		if (r1 + 1 == r2): 
+			direc = "r"
+		else: 
+			direc = "d"
+	else: 
+		rm = r2 # "reverse" way around 
+		if (r2 + 1 == r1):
+			direc = "r"
+		else: 
+			direc = "d"
+	
+	#var room1 = thisFloor.rooms[r1]
+	#var room2 = thisFloor.rooms[r2]
 	
 	# determine door positions / start & end positions 
-	
+	if (direc == "d"): 
+		# get vars for the correct rooms 
+		pass
+	elif (direc == "r"): 
+		pass
+	else: 
+		print("you done goofed")
 	# calc passage 
 	
 	#then move to an adjacent room that isn't completed 
@@ -271,6 +297,8 @@ func _ready():
 	
 	# FOR BUG TESTING!! delete later 
 	floormap.set_layer_enabled(1, true)
+	
+	
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
