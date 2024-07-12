@@ -51,15 +51,25 @@ class room:
 # Called when the node enters the scene tree for the first time.
 func generate_floor(): 
 	var thisFloor = rfloor.new()
-	thisFloor.rooms = [0]
+	thisFloor.rooms = [0] 
+	var gone_rooms: Array
+	# gone rooms-- pick random number of rooms, 0-3, randomly pick that number of rooms as gone 
+	for n in randi_range(0,3): 
+		gone_rooms.append(randi_range(0,8))
+		
 	for i in range(0, rfloor.rooms_count): # 0 - 8, range is exclusive of the second value 
-		thisFloor.rooms.push_back(generate_room(i)) 
+		thisFloor.rooms.push_back(generate_room(i, gone_rooms)) 
 	print(thisFloor.rooms)
 	return(thisFloor)
 
-func generate_room(i):
+func generate_room(i, gone_rooms):
 	# create a room object 
 	var thisRoom = room.new() 
+	
+	if (i in gone_rooms):
+		thisRoom.isgone = true
+		return(thisRoom)
+			#  can't do it this way or else it'll mess up the passages math later (ie the holy grid) !!!!!!!!!! 
 	
 	#determine which "box" this room is in (top left corner)
 	#print(i)
@@ -69,8 +79,6 @@ func generate_room(i):
 	#print(thisRoom.box)
 	
 	# decide room type 
-	# gone rooms-- pick random number of rooms, 0-3, randomly pick that number of rooms as gone 
-	
 	# dark or maze room 
 	if(randi_range(0,10) < level - 1): 
 		thisRoom.isdark = true 
@@ -140,16 +148,16 @@ func generate_passg(thisFloor):
 	print(thisFloor.rooms) # hrm.... 
 	
 	# start with one room 
-	var r1 = randi_range(0,9) 
+	var r1 = randi_range(0,8) 
 	
 	#pick a random adjacent room to connect it to 
 	# might be faster to, instead of picking random rooms and seeing if theyre adjacent, 
 	# maybe identify the rooms that *are* adjacent first (for loop iterating over r2?) 
 	# and then pick a random one of those 
-	var r2 = randi_range(0,9)
+	var r2 = randi_range(0,8)
 	while (adjrooms[r1][r2] != 1): 
 		print("not adjacent")
-		r2 = randi_range(0,9)
+		r2 = randi_range(0,8)
 	print("yes adjacent")
 	
 	#add current room to the “graph” (already completed rooms) 
@@ -159,6 +167,7 @@ func generate_passg(thisFloor):
 	#make passageway 
 	# determine direction 
 	# only right or down; if other way around, just swap r1 and r2, basically 
+	# __________ have to add checks for if room is gone!! _________ 
 	var rm: int
 	var direc: String 
 	if (r1 < r2): # "normal" way around 
