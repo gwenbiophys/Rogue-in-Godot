@@ -75,3 +75,8 @@ script = ExtResource("4_5y0vv")
 [node name="FloorMap" type="TileMap" parent="."]
 tile_set = SubResource("TileSet_pr8hc")
 format = 2
+layer_0/name = "visible"
+layer_1/name = "invisible"
+layer_1/enabled = false
+layer_1/z_index = -1
+layer_1/tile_data = PackedInt32Array()

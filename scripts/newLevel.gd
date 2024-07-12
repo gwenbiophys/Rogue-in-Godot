@@ -51,11 +51,9 @@ class room:
 # Called when the node enters the scene tree for the first time.
 func generate_floor(room, rfloor): 
 	var thisFloor = rfloor.new()
-	
+	thisFloor.rooms = [0]
 	for i in range(0, rfloor.rooms_count): # 0 - 8, range is exclusive of the second value 
-		thisFloor.rooms = [0]
-		var rooms = thisFloor.rooms
-		rooms.push_back(generate_room(rfloor, room, i)) 
+		thisFloor.rooms.push_back(generate_room(rfloor, room, i)) 
 	print(thisFloor.rooms)
 	return(thisFloor)
 
@@ -112,49 +110,62 @@ func generate_room(rfloor, room, i):
 # if the player is below the amulet spawn floor and does not ahve it, then the
 # the game will place it down, seemingly at each level.
 
-#func generate_passg(thisFloor): 
-	#var rooms = thisFloor.rooms 
-	## define an adjacent room 
-	## use 2d arrays? 
-	#var adjrooms: Array 
-	#for i in range(9): # i = r1
-		#adjrooms.append([])
-		#match i: 
-			#0:
-				#adjrooms[i].append([0, 1, 0, 1, 0, 0, 0, 0, 0])
-			#1: 
-				#adjrooms[i].append([1, 0, 1, 0, 1, 0, 0, 0, 0])
-			#2: 
-				#adjrooms[i].append([0, 1, 0, 0, 0, 1, 0, 0, 0])
-			#3: 
-				#adjrooms[i].append([1, 0, 0, 0, 1, 0, 1, 0, 0])
-			#4: 
-				#adjrooms[i].append([0, 1, 0, 1, 0, 1, 0, 1, 0])
-			#5: 
-				#adjrooms[i].append([0, 0, 1, 0, 1, 0, 0, 0, 1])
-			#6: 
-				#adjrooms[i].append([0, 0, 0, 1, 0, 0, 0, 1, 0])
-			#7: 
-				#adjrooms[i].append([0, 0, 0, 0, 1, 0, 1, 0, 1])
-			#8: 
-				#adjrooms[i].append([0, 0, 0, 0, 0, 1, 0, 1, 0])
-	#
-	#print(adjrooms)
-	#print(thisFloor.rooms)
-	## not sure if this is exactly right? but hopefully. also not sure how to reference but *shrug* 
-	#var r1 = thisFloor.rooms[randi_range(0,9)]
-	#var r2 = thisFloor.rooms[randi_range(0,9)] 
-	#if (adjrooms[r1[r2]] == true): 
-		#pass 
-	#
-	## start with one room 
-	##pick a random adjacent room to connect it to 
-	##add current room to the “graph” (already completed rooms) 
-	##then move to an adjacent room that isn't completed 
-	##if none, randomly pick an uncompleted room 
-	##repeat this process a few times to get more passages 
-#
-	#pass
+func generate_passg(thisFloor): 
+	var rooms = thisFloor.rooms 
+	# define an adjacent room 
+	var adjrooms: Array #2d array 
+	for i in range(9): # i = r1
+		adjrooms.append([])
+		match i: 
+			0:
+				adjrooms[i].append_array([0, 1, 0, 1, 0, 0, 0, 0, 0])
+			1: 
+				adjrooms[i].append_array([1, 0, 1, 0, 1, 0, 0, 0, 0])
+			2: 
+				adjrooms[i].append_array([0, 1, 0, 0, 0, 1, 0, 0, 0])
+			3: 
+				adjrooms[i].append_array([1, 0, 0, 0, 1, 0, 1, 0, 0])
+			4: 
+				adjrooms[i].append_array([0, 1, 0, 1, 0, 1, 0, 1, 0])
+			5: 
+				adjrooms[i].append_array([0, 0, 1, 0, 1, 0, 0, 0, 1])
+			6: 
+				adjrooms[i].append_array([0, 0, 0, 1, 0, 0, 0, 1, 0])
+			7: 
+				adjrooms[i].append_array([0, 0, 0, 0, 1, 0, 1, 0, 1])
+			8: 
+				adjrooms[i].append_array([0, 0, 0, 0, 0, 1, 0, 1, 0])
+	
+	print(adjrooms)
+	print(thisFloor.rooms) # hrm.... 
+	
+	# start with one room 
+	var r1 = randi_range(0,9) 
+	
+	#pick a random adjacent room to connect it to 
+	var r2 = randi_range(0,9)
+	while (adjrooms[r1][r2] != 1): 
+		print("not adjacent")
+		r2 = randi_range(0,9)
+	print("yes adjacent")
+	
+	#add current room to the “graph” (already completed rooms) 
+	var complete = [] 
+	complete.append(r1)
+	
+	#make passageway 
+	# this section basically just needs to be copied / translated from the source code 
+	# determine direction 
+	
+	# determine door positions / start & end positions 
+	
+	# calc passage 
+	
+	#then move to an adjacent room that isn't completed 
+	#if none, randomly pick an uncompleted room 
+	#repeat this process a few times to get more passages 
+		#not sure exactly how this works in code, if its repeating the same process or doing it differently 
+	pass
 
 
 func render_room(thisRoom): # renders the tiles for the rooms 
@@ -231,23 +242,23 @@ func render_room(thisRoom): # renders the tiles for the rooms
 	
 	# if normal room: 
 	# corners 
-	floormap.set_cell(0,dictCorn["top_left"], 0, Vector2i(3,0), 0) #top left 
-	floormap.set_cell(0,dictCorn["top_right"], 0, Vector2i(4,0), 0) # top right 
-	floormap.set_cell(0,dictCorn["bottom_left"], 0, Vector2i(5,0), 0) # bottom left
-	floormap.set_cell(0,dictCorn["bottom_right"], 0, Vector2i(6,0), 0) # bottom right 
+	floormap.set_cell(1,dictCorn["top_left"], 0, Vector2i(3,0), 0) #top left 
+	floormap.set_cell(1,dictCorn["top_right"], 0, Vector2i(4,0), 0) # top right 
+	floormap.set_cell(1,dictCorn["bottom_left"], 0, Vector2i(5,0), 0) # bottom left
+	floormap.set_cell(1,dictCorn["bottom_right"], 0, Vector2i(6,0), 0) # bottom right 
 	# sides 
 	for each in dictWalls["top"]: 
-		floormap.set_cell(0,each, 0, Vector2i(0,0), 0)
+		floormap.set_cell(1,each, 0, Vector2i(0,0), 0)
 	# then copy this for the left, right, and bottom 
 	
 	for each in dictWalls["bottom"]: 
-		floormap.set_cell(0, each, 0, Vector2i(0,0), 0)
+		floormap.set_cell(1, each, 0, Vector2i(0,0), 0)
 	
 	for each in dictWalls["left"]: 
-		floormap.set_cell(0, each, 0, Vector2i(1,0), 0)
+		floormap.set_cell(1, each, 0, Vector2i(1,0), 0)
 	
 	for each in dictWalls["right"]: 
-		floormap.set_cell(0, each, 0, Vector2i(2,0), 0)
+		floormap.set_cell(1, each, 0, Vector2i(2,0), 0)
 	# if dark room: 
 
 
@@ -256,7 +267,10 @@ func _ready():
 	floormap = get_node("../FloorMap")
 	var thisFloor = generate_floor(room, rfloor) 
 	print(thisFloor.rooms)
-	#generate_passg(thisFloor)
+	generate_passg(thisFloor)
+	
+	# FOR BUG TESTING!! delete later 
+	floormap.set_layer_enabled(1, true)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
