@@ -52,6 +52,7 @@ class room:
 func generate_floor(): 
 	var thisFloor = rfloor.new()
 	thisFloor.rooms = [0] 
+	
 	var gone_rooms: Array
 	# gone rooms-- pick random number of rooms, 0-3, randomly pick that number of rooms as gone 
 	for n in randi_range(0,3): 
@@ -69,7 +70,6 @@ func generate_room(i, gone_rooms):
 	if (i in gone_rooms):
 		thisRoom.isgone = true
 		return(thisRoom)
-			#  can't do it this way or else it'll mess up the passages math later (ie the holy grid) !!!!!!!!!! 
 	
 	#determine which "box" this room is in (top left corner)
 	#print(i)
