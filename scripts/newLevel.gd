@@ -49,15 +49,15 @@ class room:
 
 
 # Called when the node enters the scene tree for the first time.
-func generate_floor(room, rfloor): 
+func generate_floor(): 
 	var thisFloor = rfloor.new()
 	thisFloor.rooms = [0]
 	for i in range(0, rfloor.rooms_count): # 0 - 8, range is exclusive of the second value 
-		thisFloor.rooms.push_back(generate_room(rfloor, room, i)) 
+		thisFloor.rooms.push_back(generate_room(i)) 
 	print(thisFloor.rooms)
 	return(thisFloor)
 
-func generate_room(rfloor, room, i):
+func generate_room(i):
 	# create a room object 
 	var thisRoom = room.new() 
 	
@@ -179,6 +179,7 @@ func generate_passg(thisFloor):
 	
 	# determine door positions / start & end positions 
 	if (direc == "d"): 
+		
 		# get vars for the correct rooms 
 		pass
 	elif (direc == "r"): 
@@ -291,7 +292,7 @@ func render_room(thisRoom): # renders the tiles for the rooms
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	floormap = get_node("../FloorMap")
-	var thisFloor = generate_floor(room, rfloor) 
+	var thisFloor = generate_floor() 
 	print(thisFloor.rooms)
 	generate_passg(thisFloor)
 	
