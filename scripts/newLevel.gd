@@ -205,9 +205,6 @@ func generate_passg(thisFloor):
 
 
 func render_room(thisRoom): # renders the tiles for the rooms 
-	# eventually, move this into a script for stuff with player movement? (maybe?) 
-	# like, "when player enters room" stuff 
-	# and this script can just generate the values for the rooms / passageways  
 	
 	var dictCorn = {
 		"top_left": thisRoom.pos,
@@ -275,7 +272,6 @@ func render_room(thisRoom): # renders the tiles for the rooms
 		"right": tilesArray_right
 	}
 	
-	
 	# if normal room: 
 	# corners 
 	floormap.set_cell(1,dictCorn["top_left"], 0, Vector2i(3,0), 0) #top left 
@@ -296,7 +292,20 @@ func render_room(thisRoom): # renders the tiles for the rooms
 	for each in dictWalls["right"]: 
 		floormap.set_cell(1, each, 0, Vector2i(2,0), 0)
 	# if dark room: 
-
+	
+	# render floor tiles 
+	# array <- top_left + 1 : top_right - 1 
+	var floorArray: Array 
+	for x in range(dictCorn["top_left"].x + 1, dictCorn["top_right"].x): 
+		for y in range(dictCorn["top_left"].y + 1, dictCorn["bottom_left"].y): 
+			var coordF = Vector2.ZERO 
+			coordF = Vector2(x,y)
+			floorArray.append(coordF)
+	
+	print(floorArray)
+	
+	for each in floorArray:
+		floormap.set_cell(1, each, 0, Vector2i(7,0), 0)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
