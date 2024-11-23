@@ -51,7 +51,7 @@ class room:
 # Called when the node enters the scene tree for the first time.
 func generate_floor(): 
 	var thisFloor = rfloor.new()
-	thisFloor.rooms = [0] 
+	thisFloor.rooms = [] 
 	
 	var gone_rooms: Array
 	# gone rooms-- pick random number of rooms, 0-3, randomly pick that number of rooms as gone 
@@ -157,9 +157,12 @@ func generate_passg(thisFloor):
 	var r2 = randi_range(0,8)
 	while (adjrooms[r1][r2] != 1): 
 		print("not adjacent")
+		print(r1)
+		print(r2)
 		r2 = randi_range(0,8)
 	print("yes adjacent")
-	
+	print(r1)
+	print(r2)
 	#add current room to the “graph” (already completed rooms) 
 	var complete = [] 
 	complete.append(r1)
@@ -183,8 +186,12 @@ func generate_passg(thisFloor):
 		else: 
 			direc = "d"
 	
-	#var room1 = thisFloor.rooms[r1]
-	#var room2 = thisFloor.rooms[r2]
+	var room1 = thisFloor.rooms[r1]
+	print(room1)
+	var room2 = thisFloor.rooms[r2]
+	print(room2)
+	# UGHHHHHH this is so frustrating T_T 
+	
 	
 	# determine door positions / start & end positions 
 	if (direc == "d"): 
