@@ -69,14 +69,15 @@ func generate_room(i, gone_rooms):
 	
 	if (i in gone_rooms):
 		thisRoom.isgone = true
-		return(thisRoom)
+		return(thisRoom) # THIS is the problem ???
 	
 	#determine which "box" this room is in (top left corner)
 	#print(i)
 	thisRoom.box = Vector2.ZERO
 	thisRoom.box[0] = i % 3 * room.x_max + 1
 	thisRoom.box[1] = i / 3 * room.y_max 
-	#print(thisRoom.box)
+	print("testinggggggggggggggggggggggggg")
+	print(thisRoom.box)
 	
 	# decide room type 
 	# dark or maze room 
@@ -114,7 +115,7 @@ func generate_room(i, gone_rooms):
 	
 	render_room(thisRoom) # this is only inside the function right now for testing, have to move it later 
 		# move to wherever the "when player enters a room" code will be 
-	return room
+	return thisRoom #??? 
 # if the player is below the amulet spawn floor and does not ahve it, then the
 # the game will place it down, seemingly at each level.
 
