@@ -69,7 +69,7 @@ func generate_room(i, gone_rooms):
 	
 	if (i in gone_rooms):
 		thisRoom.isgone = true
-		return(thisRoom) # THIS is the problem ???
+		return(thisRoom) 
 	
 	#determine which "box" this room is in (top left corner)
 	#print(i)
@@ -115,7 +115,7 @@ func generate_room(i, gone_rooms):
 	
 	render_room(thisRoom) # this is only inside the function right now for testing, have to move it later 
 		# move to wherever the "when player enters a room" code will be 
-	return thisRoom #??? 
+	return thisRoom # this... this line was the motherFUCKER 
 # if the player is below the amulet spawn floor and does not ahve it, then the
 # the game will place it down, seemingly at each level.
 
@@ -146,7 +146,7 @@ func generate_passg(thisFloor):
 				adjrooms[i].append_array([0, 0, 0, 0, 0, 1, 0, 1, 0])
 	
 	print(adjrooms)
-	print(thisFloor.rooms) # hrm.... 
+	print(thisFloor.rooms) # prints "names" (ref #s) of all the rooms 
 	
 	# start with one room 
 	var r1 = randi_range(0,8) 
@@ -187,12 +187,11 @@ func generate_passg(thisFloor):
 		else: 
 			direc = "d"
 	
+	#print("check here now uwuuuuuuuuuu")
 	var room1 = thisFloor.rooms[r1]
-	print(room1)
+	#print(room1)
 	var room2 = thisFloor.rooms[r2]
-	print(room2)
-	# UGHHHHHH this is so frustrating T_T 
-	
+	#print(room2)
 	
 	# determine door positions / start & end positions 
 	if (direc == "d"): 
@@ -325,6 +324,13 @@ func _ready():
 	# FOR BUG TESTING!! delete later 
 	floormap.set_layer_enabled(1, true)
 	
+	for each in thisFloor.rooms:
+		print(each)
+		print(each.box)
+		print(each.size)
+		print(each.pos)
+		
+	print(thisFloor.rooms[4].box) 
 	
 
 
