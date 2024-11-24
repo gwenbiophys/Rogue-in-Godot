@@ -26,7 +26,9 @@ class room:
 	const rooms_max: int = 9
 	const x_min: int = 4 
 	const y_min: int = 4 
+	@warning_ignore("integer_division")
 	const x_max: int = rfloor.x_length / 3 # same as bsze.x in source code (box size) 
+	@warning_ignore("integer_division")
 	const y_max: int = rfloor.y_length / 3 # bsze.y
 	const doors_min: int = 1
 	const doors_max: int = 4
@@ -53,7 +55,7 @@ func generate_floor():
 	var thisFloor = rfloor.new()
 	thisFloor.rooms = [] 
 	
-	var gone_rooms: Array
+	var gone_rooms: Array = []
 	# gone rooms-- pick random number of rooms, 0-3, randomly pick that number of rooms as gone 
 	for n in randi_range(0,3): 
 		gone_rooms.append(randi_range(0,8))
@@ -127,7 +129,7 @@ func generate_room(i, gone_rooms):
 func generate_passg(thisFloor): 
 	var rooms = thisFloor.rooms 
 	# define an adjacent room 
-	var adjrooms: Array #2d array 
+	var adjrooms: Array[Array] = [[]] #2d array 
 	for i in range(9): # i = r1
 		adjrooms.append([])
 		match i: 
@@ -284,13 +286,13 @@ func render_room(thisRoom): # renders the tiles for the rooms
 	
 	# find coords for top wall 
 	var xwall_top = range(dictCorn["top_left"].x + 1, dictCorn["top_right"].x)
-	var ywall_top: Array 
+	var ywall_top: Array = []
 	ywall_top.resize(xwall_top.size()) # make it match the length of the x array 
 	ywall_top.fill(dictCorn["top_left"].y) # fill it with the y pos 
 	
 	var coord: Vector2 
 	
-	var tilesArray_top: Array
+	var tilesArray_top: Array = []
 	for i in range(0, xwall_top.size()): 
 		coord = Vector2(0,0)
 		coord = Vector2(xwall_top[i], ywall_top[i])
@@ -298,11 +300,11 @@ func render_room(thisRoom): # renders the tiles for the rooms
 		
 	# find coords for bottom wall 
 	var xwall_bottom = range(dictCorn["bottom_left"].x + 1, dictCorn["bottom_right"].x)
-	var ywall_bottom: Array 
+	var ywall_bottom: Array = []
 	ywall_bottom.resize(xwall_bottom.size()) # make it match the length of the x array 
 	ywall_bottom.fill(dictCorn["bottom_left"].y) # fill it with the y pos 
 	
-	var tilesArray_bottom: Array
+	var tilesArray_bottom: Array = []
 	for i in range(0, xwall_bottom.size()): 
 		coord = Vector2(0,0) 
 		coord = Vector2(xwall_bottom[i], ywall_bottom[i])
@@ -311,11 +313,11 @@ func render_room(thisRoom): # renders the tiles for the rooms
 	
 	# find coords for left wall 
 	var ywall_left = range(dictCorn["top_left"].y + 1, dictCorn["bottom_left"].y)
-	var xwall_left: Array 
+	var xwall_left: Array = []
 	xwall_left.resize(ywall_left.size()) # make it match the length of the y array 
 	xwall_left.fill(dictCorn["top_left"].x) # fill it with the x pos 
 	
-	var tilesArray_left: Array
+	var tilesArray_left: Array = []
 	for i in range(0, ywall_left.size()): 
 		coord = Vector2(0,0) 
 		coord = Vector2(xwall_left[i], ywall_left[i])
@@ -323,11 +325,11 @@ func render_room(thisRoom): # renders the tiles for the rooms
 		
 	# find coords for right wall 
 	var ywall_right = range(dictCorn["top_right"].y + 1, dictCorn["bottom_right"].y)
-	var xwall_right: Array 
+	var xwall_right: Array = []
 	xwall_right.resize(ywall_right.size()) # make it match the length of the y array 
 	xwall_right.fill(dictCorn["top_right"].x) # fill it with the x pos 
 	
-	var tilesArray_right: Array
+	var tilesArray_right: Array= []
 	for i in range(0, ywall_right.size()): 
 		coord = Vector2(0,0) 
 		coord = Vector2(xwall_right[i], ywall_right[i])
@@ -364,7 +366,7 @@ func render_room(thisRoom): # renders the tiles for the rooms
 	
 	# render floor tiles 
 	# array <- top_left + 1 : top_right - 1 
-	var floorArray: Array 
+	var floorArray: Array = []
 	for x in range(dictCorn["top_left"].x + 1, dictCorn["top_right"].x): 
 		for y in range(dictCorn["top_left"].y + 1, dictCorn["bottom_left"].y): 
 			var coordF = Vector2.ZERO 
