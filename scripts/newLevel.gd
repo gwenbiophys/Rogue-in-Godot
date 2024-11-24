@@ -158,23 +158,39 @@ func generate_passg(thisFloor):
 	# start with one room 
 	var r1 = randi_range(0,8) 
 	
+	# find its adjacent rooms 
+	var curr_adj_rooms: Array
+	for i in range(9): 
+		if adjrooms[r1][i] == 1: 
+			curr_adj_rooms.append(i)
+	
 	#pick a random adjacent room to connect it to 
-	# might be faster to, instead of picking random rooms and seeing if theyre adjacent, 
-	# maybe identify the rooms that *are* adjacent first (for loop iterating over r2?) 
-	# and then pick a random one of those 
-	var r2 = randi_range(0,8)
-	while (adjrooms[r1][r2] != 1): 
-		#print("not adjacent")
-		#print(r1)
-		#print(r2)
-		r2 = randi_range(0,8)
-	#print("yes adjacent")
-	#print(r1)
-	#print(r2)
+	var r2 = curr_adj_rooms[randi_range(0,curr_adj_rooms.size()) - 1]
+	print(r1)
+	print(curr_adj_rooms)
+	print(r2)
+	
+	
+	dig_passg(thisFloor, r1, r2)
+	
 	#add current room to the “graph” (already completed rooms) 
 	var complete = [] 
 	complete.append(r1)
 	
+	#then move to an adjacent room that isn't completed 
+	while (r1 in complete): 
+		r1 = curr_adj_rooms[randi_range(0,curr_adj_rooms.size()) - 1]
+		if curr_adj_rooms.all(func(e): return e in complete): #if none, randomly pick an uncompleted room 
+			r1 = randi_range(0,8) 
+			while r1 in complete: 
+				r1 = randi_range(0,8) 
+	
+	#repeat this process a few times to get more passages 
+		#not sure exactly how this works in code, if its repeating the same process or doing it differently 
+	pass
+
+
+func dig_passg(thisFloor, r1, r2): 
 	#make passageway 
 	# determine direction 
 	# only right or down; if other way around, just swap r1 and r2, basically 
@@ -265,11 +281,7 @@ func generate_passg(thisFloor):
 	else: 
 		floormap.set_cell(1,epos, 0, Vector2i(8,0), 0) 
 	
-	# two issues: 
-		# 1. hallway is overlapping with walls -- need to make sure turn location is limited 
-		# 2. sometimes doors are generated at same x/y, causing some issues 
-	
-	
+
 	var digpos = spos  
 	var dist = 0 # blocks travelled 
 	while !(digpos == epos):
@@ -305,12 +317,7 @@ func generate_passg(thisFloor):
 			pass 
 		else: 
 			floormap.set_cell(1,digpos, 0, Vector2i(8,0), 0) # change this to add to an array, render later 
-	
-	#then move to an adjacent room that isn't completed 
-	#if none, randomly pick an uncompleted room 
-	#repeat this process a few times to get more passages 
-		#not sure exactly how this works in code, if its repeating the same process or doing it differently 
-	pass
+	pass 
 
 
 func render_room(thisRoom): # renders the tiles for the rooms 
