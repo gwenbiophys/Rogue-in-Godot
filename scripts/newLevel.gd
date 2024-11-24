@@ -69,9 +69,7 @@ func generate_room(i, gone_rooms):
 	# create a room object 
 	var thisRoom = room.new() 
 	
-	if (i in gone_rooms):
-		thisRoom.isgone = true
-		return(thisRoom) 
+	
 	
 	#determine which "box" this room is in (top left corner)
 	#print(i)
@@ -80,6 +78,13 @@ func generate_room(i, gone_rooms):
 	thisRoom.box[1] = i / 3 * room.y_max 
 	print("testinggggggggggggggggggggggggg")
 	print(thisRoom.box)
+	
+	if (i in gone_rooms):
+		thisRoom.isgone = true
+		thisRoom.pos.x = thisRoom.box.x + randi_range(0, room.x_max)
+		thisRoom.pos.y = thisRoom.box.y + randi_range(0, room.y_max)
+		thisRoom.size = Vector2.ZERO
+		return(thisRoom) 
 	
 	# decide room type 
 	# dark or maze room 
@@ -90,7 +95,7 @@ func generate_room(i, gone_rooms):
 	
 	# decide size and location of room 
 	if thisRoom.ismaze == true:
-		pass
+		pass #have to come back and fix this later!!
 	else: 
 		# choose size of room 
 		while(thisRoom.pos.y  == 0):
@@ -173,38 +178,95 @@ func generate_passg(thisFloor):
 	#make passageway 
 	# determine direction 
 	# only right or down; if other way around, just swap r1 and r2, basically 
-	# __________ have to add checks for if room is gone!! _________ 
-	var rm: int
+	var rpf: int #room pointer from 
+	var rpt: int # room pointer to 
 	var direc: String 
 	if (r1 < r2): # "normal" way around 
-		rm = r1 
+		rpf = r1 
+		rpt = r2
 		if (r1 + 1 == r2): 
 			direc = "r"
 		else: 
 			direc = "d"
 	else: 
-		rm = r2 # "reverse" way around 
+		rpf = r2 # "reverse" way around 
+		rpt = r1
 		if (r2 + 1 == r1):
 			direc = "r"
 		else: 
 			direc = "d"
 	
 	#print("check here now uwuuuuuuuuuu")
-	var room1 = thisFloor.rooms[r1]
+	var room1 = thisFloor.rooms[rpf]
 	#print(room1)
-	var room2 = thisFloor.rooms[r2]
+	var room2 = thisFloor.rooms[rpt]
 	#print(room2)
 	
 	# determine door positions / start & end positions 
+	# __________ have to add checks for if room is gone!! _________ 
+	# these should default to the room position, to avoid issues when room is gone 
+	var spos = Vector2(room1.pos)
+	print(room2.pos)
+	var epos = Vector2(room2.pos)
+	print("epos")
+	print(epos)
+	var turn = Vector2.ZERO # direction of turn 
+	var turn_dist: int 
+	var turn_loc: int
+	
 	if (direc == "d"): 
-		
-		# get vars for the correct rooms 
-		pass
+		# set starting position to a random spot on lower wall of room1
+		if(room1.isgone == false):
+			spos.x = room1.pos.x + randi_range(0, room1.size.x - 2) + 1
+			spos.y = room1.pos.y + room1.size.y 
+		# set ending position to a random spot on upper wall of room2
+		if(room2.isgone == false):
+			epos.x = room2.pos.x + randi_range(0, room2.size.x - 2) + 1
+			epos.y = room2.pos.y
+		# determine turn direction and distance 
+		turn.y = 0
+		if (spos.x < epos.x):
+			turn.x = 1 
+		else: 
+			turn.x = -1
+		turn_dist = abs(spos.x - epos.x)
 	elif (direc == "r"): 
-		pass
+		# set starting position to a random spot on right wall of room1 
+		if(room1.isgone == false):
+			spos.x = room1.pos.x + room1.size.x 
+			spos.y = room1.pos.y + randi_range(0, room1.size.y - 2) + 1
+		# set ending position to a random spot on left wall of room2 
+		if(room2.isgone == false):
+			epos.x = room2.pos.x 
+			epos.y = room2.pos.y + randi_range(0, room2.size.y - 2) + 1
+		# determine turn direction and distance 
+		turn.x = 0
+		if (spos.y < epos.y):
+			turn.y = 1 
+		else: 
+			turn.y = -1
+		turn_dist = abs(spos.y - epos.y)
 	else: 
 		print("you done goofed")
-	# calc passage 
+	# FOR TESTING ONLY-- render doors 
+	if (room1.isgone == false):
+		floormap.set_cell(1,spos, 0, Vector2i(9,0), 0) 
+	else: 
+		floormap.set_cell(1,spos, 0, Vector2i(8,0), 0) 
+	if (room2.isgone == false):
+		floormap.set_cell(1,epos, 0, Vector2i(9,0), 0) 
+	else: 
+		floormap.set_cell(1,epos, 0, Vector2i(8,0), 0) 
+	
+	# determine turn location 
+	turn_loc = randi_range(0, turn_dist - 1) + 1
+	
+	# calc location of all the tiles, add to an array 
+	# so basically. i could either do it the way they do in the source code, where you basically "dig" along 
+	# one block at a time. OR i could try to just do like. x = spos.x to spos.x + turn_loc, etc. 
+	# like do it in chunks 
+	# but i think i would have to use for loops for that anyways. so it would be simpler to just "dig" i think 
+	# have to add del.x and del.y variables to tell it which direction to increment in 
 	
 	#then move to an adjacent room that isn't completed 
 	#if none, randomly pick an uncompleted room 
