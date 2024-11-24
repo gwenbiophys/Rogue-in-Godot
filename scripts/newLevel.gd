@@ -174,19 +174,33 @@ func generate_passg(thisFloor):
 	dig_passg(thisFloor, r1, r2)
 	
 	#add current room to the “graph” (already completed rooms) 
+		# need to adjust this so that it's not only whether that room is complete, but 
+		# whether there's a connection between two rooms already 
 	var complete = [] 
 	complete.append(r1)
+	print("r1: ", r1)
+	print("r2: ", r2)
+	print("complete: ", complete)
 	
 	#then move to an adjacent room that isn't completed 
 	while (r1 in complete): 
 		r1 = curr_adj_rooms[randi_range(0,curr_adj_rooms.size()) - 1]
 		if curr_adj_rooms.all(func(e): return e in complete): #if none, randomly pick an uncompleted room 
-			r1 = randi_range(0,8) 
-			while r1 in complete: 
-				r1 = randi_range(0,8) 
+			r1 = randi_range(0,8)  # pick a new room (will check if complete on next loop)
 	
+	# testing 
+	curr_adj_rooms = []
+	for i in range(9): 
+		if adjrooms[r1][i] == 1: 
+			curr_adj_rooms.append(i)
+	r2 = curr_adj_rooms[randi_range(0,curr_adj_rooms.size()) - 1]
+	complete.append(r1)
+	dig_passg(thisFloor, r1, r2)
 	#repeat this process a few times to get more passages 
 		#not sure exactly how this works in code, if its repeating the same process or doing it differently 
+	print("r1: ", r1)
+	print("r2: ", r2)
+	print("complete: ", complete)
 	pass
 
 
@@ -285,12 +299,12 @@ func dig_passg(thisFloor, r1, r2):
 	var digpos = spos  
 	var dist = 0 # blocks travelled 
 	while !(digpos == epos):
-		print("spos: ", spos)
-		print("epos: ", epos)
-		print("digpos: ", digpos)
-		print("dist: ", dist)
-		print("turn_loc: ", turn_loc)
-		print("_____________________")
+		#print("spos: ", spos)
+		#print("epos: ", epos)
+		#print("digpos: ", digpos)
+		#print("dist: ", dist)
+		#print("turn_loc: ", turn_loc)
+		#print("_____________________")
 		# determine which part of pass we're on 
 		if dist < turn_loc: # if not yet at turn, move 
 			digpos += del
