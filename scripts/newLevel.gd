@@ -62,7 +62,7 @@ func generate_floor():
 		
 	for i in range(0, rfloor.rooms_count): # 0 - 8, range is exclusive of the second value 
 		thisFloor.rooms.push_back(generate_room(i, gone_rooms)) 
-	print(thisFloor.rooms)
+	#print(thisFloor.rooms)
 	return(thisFloor)
 
 func generate_room(i, gone_rooms):
@@ -76,8 +76,8 @@ func generate_room(i, gone_rooms):
 	thisRoom.box = Vector2.ZERO
 	thisRoom.box[0] = i % 3 * room.x_max + 1
 	thisRoom.box[1] = i / 3 * room.y_max 
-	print("testinggggggggggggggggggggggggg")
-	print(thisRoom.box)
+	#print("testinggggggggggggggggggggggggg")
+	#print(thisRoom.box)
 	
 	if (i in gone_rooms):
 		thisRoom.isgone = true
@@ -152,8 +152,8 @@ func generate_passg(thisFloor):
 			8: 
 				adjrooms[i].append_array([0, 0, 0, 0, 0, 1, 0, 1, 0])
 	
-	print(adjrooms)
-	print(thisFloor.rooms) # prints "names" (ref #s) of all the rooms 
+	#print(adjrooms)
+	#print(thisFloor.rooms) # prints "names" (ref #s) of all the rooms 
 	
 	# start with one room 
 	var r1 = randi_range(0,8) 
@@ -164,13 +164,13 @@ func generate_passg(thisFloor):
 	# and then pick a random one of those 
 	var r2 = randi_range(0,8)
 	while (adjrooms[r1][r2] != 1): 
-		print("not adjacent")
-		print(r1)
-		print(r2)
+		#print("not adjacent")
+		#print(r1)
+		#print(r2)
 		r2 = randi_range(0,8)
-	print("yes adjacent")
-	print(r1)
-	print(r2)
+	#print("yes adjacent")
+	#print(r1)
+	#print(r2)
 	#add current room to the “graph” (already completed rooms) 
 	var complete = [] 
 	complete.append(r1)
@@ -206,13 +206,14 @@ func generate_passg(thisFloor):
 	# __________ have to add checks for if room is gone!! _________ 
 	# these should default to the room position, to avoid issues when room is gone 
 	var spos = Vector2(room1.pos)
-	print(room2.pos)
+	#print(room2.pos)
 	var epos = Vector2(room2.pos)
-	print("epos")
-	print(epos)
+	#print("epos")
+	#print(epos)
 	var turn = Vector2.ZERO # direction of turn 
 	var turn_dist: int 
 	var turn_loc: int
+	var del = Vector2.ZERO
 	
 	if (direc == "d"): 
 		# set starting position to a random spot on lower wall of room1
@@ -230,6 +231,9 @@ func generate_passg(thisFloor):
 		else: 
 			turn.x = -1
 		turn_dist = abs(spos.x - epos.x)
+		# determine relative turn location 
+		turn_loc = randi_range(1, epos.y - spos.y - 1) 
+		del = Vector2(0,1)
 	elif (direc == "r"): 
 		# set starting position to a random spot on right wall of room1 
 		if(room1.isgone == false):
@@ -246,6 +250,9 @@ func generate_passg(thisFloor):
 		else: 
 			turn.y = -1
 		turn_dist = abs(spos.y - epos.y)
+		# determine relative turn location 
+		turn_loc = randi_range(1, epos.x - spos.x - 1) 
+		del = Vector2(1,0)
 	else: 
 		print("you done goofed")
 	# FOR TESTING ONLY-- render doors 
@@ -258,15 +265,46 @@ func generate_passg(thisFloor):
 	else: 
 		floormap.set_cell(1,epos, 0, Vector2i(8,0), 0) 
 	
-	# determine turn location 
-	turn_loc = randi_range(0, turn_dist - 1) + 1
+	# two issues: 
+		# 1. hallway is overlapping with walls -- need to make sure turn location is limited 
+		# 2. sometimes doors are generated at same x/y, causing some issues 
 	
-	# calc location of all the tiles, add to an array 
-	# so basically. i could either do it the way they do in the source code, where you basically "dig" along 
-	# one block at a time. OR i could try to just do like. x = spos.x to spos.x + turn_loc, etc. 
-	# like do it in chunks 
-	# but i think i would have to use for loops for that anyways. so it would be simpler to just "dig" i think 
-	# have to add del.x and del.y variables to tell it which direction to increment in 
+	
+	var digpos = spos  
+	var dist = 0 # blocks travelled 
+	while !(digpos == epos):
+		print("spos: ", spos)
+		print("epos: ", epos)
+		print("digpos: ", digpos)
+		print("dist: ", dist)
+		print("turn_loc: ", turn_loc)
+		print("_____________________")
+		# determine which part of pass we're on 
+		if dist < turn_loc: # if not yet at turn, move 
+			digpos += del
+		elif dist == turn_loc and turn_dist > 0: # if at turn 
+			del = turn # change direction 
+			digpos += del # move in new direction 
+		elif dist > turn_loc and dist < turn_loc + turn_dist: # if along turn section 
+			digpos += del # continue moving in new direction 
+		elif dist > turn_loc + turn_dist: # if past turn section 
+			if (direc == "d"): # set direction back to original 
+				del = Vector2(0,1)
+			else: 
+				del = Vector2(1,0)
+			digpos += del # move in original direction 
+		else: 
+			pass 
+		
+		dist += 1 # travelled another block 
+		
+		if digpos.x > 100 or digpos.y > 100: # preventing from getting stuck in while loop, for bug testing 
+			break
+		
+		if digpos == spos or digpos== epos: 
+			pass 
+		else: 
+			floormap.set_cell(1,digpos, 0, Vector2i(8,0), 0) # change this to add to an array, render later 
 	
 	#then move to an adjacent room that isn't completed 
 	#if none, randomly pick an uncompleted room 
@@ -373,7 +411,7 @@ func render_room(thisRoom): # renders the tiles for the rooms
 			coordF = Vector2(x,y)
 			floorArray.append(coordF)
 	
-	print(floorArray)
+	#print(floorArray)
 	
 	for each in floorArray:
 		floormap.set_cell(1, each, 0, Vector2i(7,0), 0)
@@ -382,19 +420,19 @@ func render_room(thisRoom): # renders the tiles for the rooms
 func _ready():
 	floormap = get_node("../FloorMap")
 	var thisFloor = generate_floor() 
-	print(thisFloor.rooms)
+	#print(thisFloor.rooms)
 	generate_passg(thisFloor)
 	
 	# FOR BUG TESTING!! delete later 
 	floormap.set_layer_enabled(1, true)
 	
-	for each in thisFloor.rooms:
-		print(each)
-		print(each.box)
-		print(each.size)
-		print(each.pos)
-		
-	print(thisFloor.rooms[4].box) 
+	#for each in thisFloor.rooms:
+		#print(each)
+		#print(each.box)
+		#print(each.size)
+		#print(each.pos)
+		#
+	#print(thisFloor.rooms[4].box) 
 	
 
 
@@ -402,6 +440,7 @@ func _ready():
 func _process(delta):
 	if Input.is_action_just_pressed("new-floor"):
 		floormap.clear()
+		print("New floor")
 		var thisFloor = generate_floor() 
 		generate_passg(thisFloor)
 
