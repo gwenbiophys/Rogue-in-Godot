@@ -266,7 +266,7 @@ func generate_passg(thisFloor):
 	# one block at a time. OR i could try to just do like. x = spos.x to spos.x + turn_loc, etc. 
 	# like do it in chunks 
 	# but i think i would have to use for loops for that anyways. so it would be simpler to just "dig" i think 
-	
+	# have to add del.x and del.y variables to tell it which direction to increment in 
 	
 	#then move to an adjacent room that isn't completed 
 	#if none, randomly pick an uncompleted room 
