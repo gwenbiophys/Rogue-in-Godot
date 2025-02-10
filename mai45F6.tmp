@@ -1,0 +1,82 @@
+[gd_scene load_steps=8 format=3 uid="uid://bshajxo1sq606"]
+
+[ext_resource type="Script" path="res://addons/onscreenkeyboard/onscreen_keyboard.gd" id="1_jpl6o"]
+[ext_resource type="Texture2D" uid="uid://b8q6dnfxqfbjx" path="res://assets/player_sprite.png" id="2_icfgg"]
+[ext_resource type="Script" path="res://keyboard.gd" id="3_2tynu"]
+[ext_resource type="Script" path="res://scripts/newLevel.gd" id="4_5y0vv"]
+[ext_resource type="Texture2D" uid="uid://cgcb2jv11ouof" path="res://assets/rogue wall tiles.png" id="5_e86t7"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_54jlb"]
+texture = ExtResource("5_e86t7")
+separation = Vector2i(1, 1)
+texture_region_size = Vector2i(18, 18)
+2:0/0 = 0
+3:0/0 = 0
+4:0/0 = 0
+6:0/0 = 0
+7:0/0 = 0
+8:0/0 = 0
+9:0/0 = 0
+10:0/0 = 0
+5:0/0 = 0
+1:0/0 = 0
+0:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_pr8hc"]
+tile_size = Vector2i(18, 18)
+sources/0 = SubResource("TileSetAtlasSource_54jlb")
+
+[node name="main" type="Node2D"]
+
+[node name="start" type="Node2D" parent="."]
+
+[node name="RichTextLabel" type="RichTextLabel" parent="start"]
+visible = false
+offset_left = 219.0
+offset_top = 6.0
+offset_right = 346.0
+offset_bottom = 64.0
+text = "Rogue"
+
+[node name="LineEdit" type="LineEdit" parent="start"]
+visible = false
+offset_left = 147.0
+offset_top = 335.0
+offset_right = 394.0
+offset_bottom = 366.0
+text = "Your Name:"
+
+[node name="OnscreenKeyboard" type="PanelContainer" parent="start"]
+visible = false
+offset_left = 150.0
+offset_top = 12.0
+offset_right = 382.0
+offset_bottom = 148.0
+script = ExtResource("1_jpl6o")
+
+[node name="player" type="Node" parent="."]
+
+[node name="Node2D" type="Node2D" parent="player"]
+
+[node name="PlayerSprite" type="Sprite2D" parent="player/Node2D"]
+position = Vector2(189, 153)
+texture = ExtResource("2_icfgg")
+
+[node name="player_input" type="Node" parent="player"]
+script = ExtResource("3_2tynu")
+
+[node name="environment" type="Node" parent="."]
+script = ExtResource("4_5y0vv")
+
+[node name="Node2D" type="Node2D" parent="environment"]
+
+[node name="menu" type="Node" parent="."]
+
+[node name="FloorMap" type="TileMap" parent="."]
+tile_set = SubResource("TileSet_pr8hc")
+format = 2
+layer_0/name = "visible"
+layer_1/name = "invisible"
+layer_1/enabled = false
+layer_1/z_index = -1
+layer_1/tile_data = PackedInt32Array()

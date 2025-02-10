@@ -69,8 +69,6 @@ func generate_room(i, gone_rooms):
 	# create a room object 
 	var thisRoom = room.new() 
 	
-	
-	
 	#determine which "box" this room is in (top left corner)
 	#print(i)
 	thisRoom.box = Vector2.ZERO
@@ -126,11 +124,95 @@ func generate_room(i, gone_rooms):
 # if the player is below the amulet spawn floor and does not ahve it, then the
 # the game will place it down, seemingly at each level.
 
+func single_passg(floor, adjrooms):
+	# init -1 so we can tell if no rooms have been selected yet 
+	var r1: int = -1 
+	var r2: int = -1 
+	var complete_rooms: Array[int]
+	var complete_pairs: Array[Vector2] = []
+	var curr_adj_rooms: Array[int]
+	var all_conn_rooms: Array[int]
+	print("r1: ", r1)
+	print("r2: ", r2)
+	#print("complete_rooms: ", complete_rooms)
+	
+	# pick a random incomplete room 
+	var select_adj_rooms = func select_adj_rooms(r1): 
+		curr_adj_rooms = []
+		for i in range(9): 
+			if adjrooms[r1][i] == 1: 
+				curr_adj_rooms.append(i)
+			#print("curr_adj_rooms", curr_adj_rooms)
+		return curr_adj_rooms
+	
+	var room_selecter = func room_selecter(r1, curr_adj_rooms, complete_rooms): 
+		if (r1 == -1): # on first selection 
+			# pick a random r1 
+			return randi_range(0,8) 
+		else: 
+			# pick a room that is adjacent and not complete  
+			var comp_filtered_rooms = range(0,9).filter(func(e): return !(e in complete_rooms))  # only incomplete rooms 
+			var comp_adj_filtered_rooms = comp_filtered_rooms.filter(func(e): return e in curr_adj_rooms)
+			
+			print("curr_adj_rooms (inside function): ", curr_adj_rooms)
+			print("complete_rooms (inside function): ", complete_rooms)
+			print("filtered_rooms: ", comp_adj_filtered_rooms)
+			#print("rooms: ", comp_adj_filtered_rooms.pick_random())
+			
+			if comp_adj_filtered_rooms.size() == 0:  #if no qualifying rooms 
+				if comp_filtered_rooms.size() == 0: # if no incomplete rooms at all 
+					pass 
+				else: 
+					return comp_filtered_rooms.pick_random() # pick a random incomplete room 
+			else: 
+				return comp_adj_filtered_rooms.pick_random() # pick a random incomplete *and* adjacent room 
+	
+	
+	for i in range(9): 
+		if !(i in all_conn_rooms): # if there are any rooms that do not have at least 1 passg 
+			for j in range(5): # this value can be adjusted-- higher for more hallways 
+				if room_selecter.call(r1, curr_adj_rooms, complete_rooms) == null: #if we ran out of incomplete rooms 
+					break 
+				else: 
+					r1 = room_selecter.call(r1, curr_adj_rooms, complete_rooms)
+				print("r1: ", r1)
+				
+				# (re)define current adjacent rooms 
+				curr_adj_rooms = select_adj_rooms.call(r1)
+				print("curr_adj_rooms: ", curr_adj_rooms)
+				
+				var check_pairs = func check_pairs(room): # check each pair to see if its in the complete_pairs 
+					if Vector2(r1, room) in complete_pairs: 
+						return true
+					else: 
+						return false 
+				
+				# pick an adjacent r2  
+				r2 = curr_adj_rooms.pick_random()
+				while (Vector2(r1, r2) in complete_pairs): # if complete, redo until not 
+					if curr_adj_rooms.all(check_pairs): # if all pairs are already complete 
+						r1 = -1 # reset 
+						r2 = -1
+						break 
+					else: # otherwise, try a diff room 
+						r2 = curr_adj_rooms.pick_random() 
+				
+				if r1 >= 0: 
+					# set complete rooms and connections 
+					complete_rooms.append(r1) 
+					all_conn_rooms.append([r1, r2])
+					complete_pairs.append(Vector2(r1,r2))
+					complete_pairs.append(Vector2(r2,r1)) 
+					print("complete_pairs: ", complete_pairs)
+					dig_passg(floor, r1, r2) 
+					#await get_tree().create_timer(1).timeout
+
+
 func generate_passg(floor: rfloor): 
 	var rooms: Array = floor.rooms 
+	
 	# define an adjacent room 
 	var adjrooms: Array[Array] = [[]] #2d array 
-	
 	#TODO initialize as variable
 	for i in range(9): # i = r1
 		adjrooms.append([])
@@ -156,56 +238,8 @@ func generate_passg(floor: rfloor):
 	
 	#print(adjrooms)
 	#print(thisFloor.rooms) # prints "names" (ref #s) of all the rooms 
+	single_passg(floor, adjrooms) 
 	
-	# start with one room 
-	var r1: int = randi_range(0,8) 
-	
-	# find its adjacent rooms 
-	var curr_adj_rooms: Array[int]
-	for i in range(9): 
-		if adjrooms[r1][i] == 1: 
-			curr_adj_rooms.append(i)
-	
-	#pick a random adjacent room to connect it to 
-	var r2: int = curr_adj_rooms[randi_range(0,curr_adj_rooms.size()) - 1]
-	print(r1)
-	print(curr_adj_rooms)
-	print(r2)
-	
-	
-	dig_passg(floor, r1, r2)
-	
-	#add current room to the “graph” (already completed rooms) 
-		# need to adjust this so that it's not only whether that room is complete, but 
-		# whether there's a connection between two rooms already 
-	var complete: Array[int] = [] 
-	complete.append(r1)
-	print("r1: ", r1)
-	print("r2: ", r2)
-	print("complete: ", complete)
-
-	#then move to an adjacent room that isn't completed 
-	while (r1 in complete): 
-
-		r1 = curr_adj_rooms[randi_range(0,curr_adj_rooms.size()) - 1]
-		if curr_adj_rooms.all(func(e): return e in complete): #if none, randomly pick an uncompleted room 
-			r1 = randi_range(0,8)  # pick a new room (will check if complete on next loop)
-	
-	# testing 
-	curr_adj_rooms = []
-	for i in range(9): 
-		if adjrooms[r1][i] == 1: 
-			curr_adj_rooms.append(i)
-	r2 = curr_adj_rooms[randi_range(0,curr_adj_rooms.size()) - 1]
-	complete.append(r1)
-	dig_passg(floor, r1, r2)
-	#repeat this process a few times to get more passages 
-		#not sure exactly how this works in code, if its repeating the same process or doing it differently 
-	print("r1: ", r1)
-	print("r2: ", r2)
-	print("complete: ", complete)
-	pass
-
 
 func dig_passg(thisFloor, r1, r2): 
 	#make passageway 
