@@ -126,10 +126,12 @@ func generate_room(i, gone_rooms):
 # if the player is below the amulet spawn floor and does not ahve it, then the
 # the game will place it down, seemingly at each level.
 
-func generate_passg(thisFloor): 
-	var rooms = thisFloor.rooms 
+func generate_passg(floor: rfloor): 
+	var rooms: Array = floor.rooms 
 	# define an adjacent room 
 	var adjrooms: Array[Array] = [[]] #2d array 
+	
+	#TODO initialize as variable
 	for i in range(9): # i = r1
 		adjrooms.append([])
 		match i: 
@@ -156,34 +158,35 @@ func generate_passg(thisFloor):
 	#print(thisFloor.rooms) # prints "names" (ref #s) of all the rooms 
 	
 	# start with one room 
-	var r1 = randi_range(0,8) 
+	var r1: int = randi_range(0,8) 
 	
 	# find its adjacent rooms 
-	var curr_adj_rooms: Array
+	var curr_adj_rooms: Array[int]
 	for i in range(9): 
 		if adjrooms[r1][i] == 1: 
 			curr_adj_rooms.append(i)
 	
 	#pick a random adjacent room to connect it to 
-	var r2 = curr_adj_rooms[randi_range(0,curr_adj_rooms.size()) - 1]
+	var r2: int = curr_adj_rooms[randi_range(0,curr_adj_rooms.size()) - 1]
 	print(r1)
 	print(curr_adj_rooms)
 	print(r2)
 	
 	
-	dig_passg(thisFloor, r1, r2)
+	dig_passg(floor, r1, r2)
 	
 	#add current room to the “graph” (already completed rooms) 
 		# need to adjust this so that it's not only whether that room is complete, but 
 		# whether there's a connection between two rooms already 
-	var complete = [] 
+	var complete: Array[int] = [] 
 	complete.append(r1)
 	print("r1: ", r1)
 	print("r2: ", r2)
 	print("complete: ", complete)
-	
+
 	#then move to an adjacent room that isn't completed 
 	while (r1 in complete): 
+
 		r1 = curr_adj_rooms[randi_range(0,curr_adj_rooms.size()) - 1]
 		if curr_adj_rooms.all(func(e): return e in complete): #if none, randomly pick an uncompleted room 
 			r1 = randi_range(0,8)  # pick a new room (will check if complete on next loop)
@@ -195,7 +198,7 @@ func generate_passg(thisFloor):
 			curr_adj_rooms.append(i)
 	r2 = curr_adj_rooms[randi_range(0,curr_adj_rooms.size()) - 1]
 	complete.append(r1)
-	dig_passg(thisFloor, r1, r2)
+	dig_passg(floor, r1, r2)
 	#repeat this process a few times to get more passages 
 		#not sure exactly how this works in code, if its repeating the same process or doing it differently 
 	print("r1: ", r1)
