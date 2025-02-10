@@ -124,6 +124,7 @@ func generate_room(i, gone_rooms):
 # if the player is below the amulet spawn floor and does not ahve it, then the
 # the game will place it down, seemingly at each level.
 
+# called single but actually does all the passages lmao 
 func single_passg(floor, adjrooms):
 	# init -1 so we can tell if no rooms have been selected yet 
 	var r1: int = -1 
@@ -136,7 +137,7 @@ func single_passg(floor, adjrooms):
 	print("r2: ", r2)
 	#print("complete_rooms: ", complete_rooms)
 	
-	# pick a random incomplete room 
+	# define adjacent rooms 
 	var select_adj_rooms = func select_adj_rooms(r1): 
 		curr_adj_rooms = []
 		for i in range(9): 
@@ -145,6 +146,7 @@ func single_passg(floor, adjrooms):
 			#print("curr_adj_rooms", curr_adj_rooms)
 		return curr_adj_rooms
 	
+	# selects room 1 (r1) 
 	var room_selecter = func room_selecter(r1, curr_adj_rooms, complete_rooms): 
 		if (r1 == -1): # on first selection 
 			# pick a random r1 
