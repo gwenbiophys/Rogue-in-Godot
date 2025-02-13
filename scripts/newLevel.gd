@@ -26,6 +26,7 @@ class room:
 	const rooms_max: int = 9
 	const x_min: int = 4 
 	const y_min: int = 4 
+	# can we rename these to match the original code? the current names are confusing 
 	@warning_ignore("integer_division")
 	const x_max: int = rfloor.x_length / 3 # same as bsze.x in source code (box size) 
 	@warning_ignore("integer_division")
@@ -72,15 +73,15 @@ func generate_room(i, gone_rooms):
 	#determine which "box" this room is in (top left corner)
 	#print(i)
 	thisRoom.box = Vector2.ZERO
-	thisRoom.box[0] = i % 3 * room.x_max + 1
+	thisRoom.box[0] = i % 3 * room.x_max 
 	thisRoom.box[1] = i / 3 * room.y_max 
 	#print("testinggggggggggggggggggggggggg")
 	#print(thisRoom.box)
 	
 	if (i in gone_rooms):
 		thisRoom.isgone = true
-		thisRoom.pos.x = thisRoom.box.x + randi_range(0, room.x_max)
-		thisRoom.pos.y = thisRoom.box.y + randi_range(0, room.y_max)
+		thisRoom.pos.x = thisRoom.box.x + randi_range(0, room.x_max - 1)
+		thisRoom.pos.y = thisRoom.box.y + randi_range(0, room.y_max - 1)
 		thisRoom.size = Vector2.ZERO
 		return(thisRoom) 
 	
@@ -99,10 +100,13 @@ func generate_room(i, gone_rooms):
 		while(thisRoom.pos.y  == 0):
 			thisRoom.size.x = randi_range(0, room.x_max - 4) + 4
 			thisRoom.size.y = randi_range(0, room.y_max - 4) + 4
+			#print("size: ", thisRoom.size)
 			# choose position of room based on size 
 			thisRoom.pos.x = thisRoom.box.x + randi_range(0, room.x_max - thisRoom.size.x)
 			thisRoom.pos.y = thisRoom.box.y + randi_range(0, room.y_max - thisRoom.size.y) 
+			#print("pos: ", thisRoom.pos)
 			# if outside bounds of the box (plus buffer), redo 
+			# i think i need to redo these lines to properly keep the rooms inside their boxes <<<<< 
 			if (thisRoom.pos.y >= thisRoom.box.y + thisRoom.size.y - 1 ): 
 				thisRoom.pos.y = 0
 			if (thisRoom.pos.y <= thisRoom.box.y + 1): 
@@ -133,8 +137,8 @@ func single_passg(floor, adjrooms):
 	var complete_pairs: Array[Vector2] = []
 	var curr_adj_rooms: Array[int]
 	var all_conn_rooms: Array[int]
-	print("r1: ", r1)
-	print("r2: ", r2)
+	#print("r1: ", r1)
+	#print("r2: ", r2)
 	#print("complete_rooms: ", complete_rooms)
 	
 	# define adjacent rooms 
@@ -156,9 +160,9 @@ func single_passg(floor, adjrooms):
 			var comp_filtered_rooms = range(0,9).filter(func(e): return !(e in complete_rooms))  # only incomplete rooms 
 			var comp_adj_filtered_rooms = comp_filtered_rooms.filter(func(e): return e in curr_adj_rooms)
 			
-			print("curr_adj_rooms (inside function): ", curr_adj_rooms)
-			print("complete_rooms (inside function): ", complete_rooms)
-			print("filtered_rooms: ", comp_adj_filtered_rooms)
+			#print("curr_adj_rooms (inside function): ", curr_adj_rooms)
+			#print("complete_rooms (inside function): ", complete_rooms)
+			#print("filtered_rooms: ", comp_adj_filtered_rooms)
 			#print("rooms: ", comp_adj_filtered_rooms.pick_random())
 			
 			if comp_adj_filtered_rooms.size() == 0:  #if no qualifying rooms 
@@ -177,11 +181,11 @@ func single_passg(floor, adjrooms):
 					break 
 				else: 
 					r1 = room_selecter.call(r1, curr_adj_rooms, complete_rooms)
-				print("r1: ", r1)
+				#print("r1: ", r1)
 				
 				# (re)define current adjacent rooms 
 				curr_adj_rooms = select_adj_rooms.call(r1)
-				print("curr_adj_rooms: ", curr_adj_rooms)
+				#print("curr_adj_rooms: ", curr_adj_rooms)
 				
 				var check_pairs = func check_pairs(room): # check each pair to see if its in the complete_pairs 
 					if Vector2(r1, room) in complete_pairs: 
@@ -205,7 +209,7 @@ func single_passg(floor, adjrooms):
 					all_conn_rooms.append([r1, r2])
 					complete_pairs.append(Vector2(r1,r2))
 					complete_pairs.append(Vector2(r2,r1)) 
-					print("complete_pairs: ", complete_pairs)
+					#print("complete_pairs: ", complete_pairs)
 					dig_passg(floor, r1, r2) 
 					#await get_tree().create_timer(1).timeout
 
@@ -287,12 +291,12 @@ func dig_passg(thisFloor, r1, r2):
 	if (direc == "d"): 
 		# set starting position to a random spot on lower wall of room1
 		if(room1.isgone == false):
-			spos.x = room1.pos.x + randi_range(0, room1.size.x - 2) + 1
-			spos.y = room1.pos.y + room1.size.y 
+			spos.x = room1.pos.x + randi_range(1, room1.size.x - 2) # subtract one bc weird tile math, subtract another to not put door on corner tile
+			spos.y = room1.pos.y + room1.size.y - 1
 		# set ending position to a random spot on upper wall of room2
 		if(room2.isgone == false):
-			epos.x = room2.pos.x + randi_range(0, room2.size.x - 2) + 1
-			epos.y = room2.pos.y
+			epos.x = room2.pos.x + randi_range(1, room2.size.x - 2) 
+			epos.y = room2.pos.y 
 		# determine turn direction and distance 
 		turn.y = 0
 		if (spos.x < epos.x):
@@ -306,12 +310,12 @@ func dig_passg(thisFloor, r1, r2):
 	elif (direc == "r"): 
 		# set starting position to a random spot on right wall of room1 
 		if(room1.isgone == false):
-			spos.x = room1.pos.x + room1.size.x 
-			spos.y = room1.pos.y + randi_range(0, room1.size.y - 2) + 1
+			spos.x = room1.pos.x + room1.size.x - 1
+			spos.y = room1.pos.y + randi_range(1, room1.size.y - 2)
 		# set ending position to a random spot on left wall of room2 
 		if(room2.isgone == false):
 			epos.x = room2.pos.x 
-			epos.y = room2.pos.y + randi_range(0, room2.size.y - 2) + 1
+			epos.y = room2.pos.y + randi_range(1, room2.size.y - 2)
 		# determine turn direction and distance 
 		turn.x = 0
 		if (spos.y < epos.y):
@@ -377,9 +381,9 @@ func render_room(thisRoom): # renders the tiles for the rooms
 	
 	var dictCorn = {
 		"top_left": thisRoom.pos,
-		"top_right": thisRoom.pos + Vector2(thisRoom.size.x, 0),
-		"bottom_left": thisRoom.pos + Vector2(0, thisRoom.size.y),
-		"bottom_right": thisRoom.pos + Vector2(thisRoom.size.x, thisRoom.size.y), 
+		"top_right": thisRoom.pos + Vector2(thisRoom.size.x - 1, 0),
+		"bottom_left": thisRoom.pos + Vector2(0, thisRoom.size.y - 1),
+		"bottom_right": thisRoom.pos + Vector2(thisRoom.size.x - 1, thisRoom.size.y - 1), 
 	}
 	
 	# find coords for top wall 
@@ -494,7 +498,6 @@ func _ready():
 		#
 	#print(thisFloor.rooms[4].box) 
 	
-
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
